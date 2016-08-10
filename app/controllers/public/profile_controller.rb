@@ -74,6 +74,7 @@ class ProfileController < PublicController
 
   def following
     @followed_people = profile.followed_profiles.paginate(:per_page => per_page, :page => params[:npage], :total_entries => profile.followed_profiles.count)
+    return @followed_people
   end
 
   def followed
@@ -170,6 +171,7 @@ class ProfileController < PublicController
     if profile.followed_by?(current_person)
       render :text => _("You are already following %s.") % profile.name, :status => 400
     else
+      params[:circles] ||= []
       selected_circles = params[:circles].map{ |circle_name, circle_id| Circle.find_by(:id => circle_id) }.select{ |c| c.present? }
       if selected_circles.present?
         current_person.follow(profile, selected_circles)
@@ -181,7 +183,7 @@ class ProfileController < PublicController
   end
 
   def find_profile_circles
-    circles = Circle.where(:person => current_person, :profile_type => profile.class.name)
+    circles = Circle.where(:owner => current_person, :profile_type => profile.class.name)
     render :partial => 'blocks/profile_info_actions/circles', :locals => { :circles => circles, :profile_types => Circle.profile_types.to_a }
   end
 
@@ -260,10 +262,11 @@ class ProfileController < PublicController
   end
 
   def search_followed
-    result = []
-    circles = find_by_contents(:circles, user, user.circles.where(:profile_type => 'Person'), params[:q])[:results]
-    followed = find_by_contents(:followed, user, Profile.followed_by(user), params[:q])[:results]
-    result = circles + followed
+    circles = find_by_contents(:circles, user, user.owned_circles.where(:profile_type => 'Person'), params[:q])[:results]
+    local_followed = find_by_contents(:followed, user, user.local_followed_profiles, params[:q])[:results]
+    external_followed = find_by_contents(:followed, user, user.external_followed_profiles, params[:q])[:results]
+
+    result = circles + local_followed + external_followed
     render :text => prepare_to_token_input_by_class(result).to_json
   end
 
@@ -516,7 +519,7 @@ class ProfileController < PublicController
         followed << Person.find(identifier)
       when 'Circle'
         circle = Circle.find(identifier)
-        followed += Profile.in_circle(circle)
+        followed += circle.profiles
       end
     end
     followed.uniq
