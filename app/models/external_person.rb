@@ -1,11 +1,11 @@
 # A pseudo profile is a person from a remote network
-class ExternalPerson < ActiveRecord::Base
+class ExternalPerson < ExternalProfile
 
   include Human
   include ProfileEntity
+  include Follower
 
   validates_uniqueness_of :identifier, scope: :source
-
   validates_presence_of :source, :email, :created_at
 
   attr_accessible :source, :email, :created_at
@@ -27,13 +27,6 @@ class ExternalPerson < ActiveRecord::Base
     _('Public profile')
   end
 
-  def avatar
-    "http://#{self.source}/profile/#{self.identifier}/icon/"
-  end
-
-  def url
-    "http://#{self.source}/profile/#{self.identifier}"
-  end
 
   alias :public_profile_url :url
 
@@ -73,10 +66,6 @@ class ExternalPerson < ActiveRecord::Base
   end
   def top_url(scheme = 'http')
     "#{scheme}://#{self.source}"
-  end
-
-  def profile_custom_icon(gravatar_default=nil)
-    self.avatar
   end
 
   def preferred_login_redirection
@@ -199,7 +188,7 @@ class ExternalPerson < ActiveRecord::Base
      build_contact: nil, is_a_friend?: false, ask_to_join?: false, refuse_join:
      nil, blocks_to_expire_cache: [], cache_keys: [], communities_cache_key: '',
      friends_cache_key: '', manage_friends_cache_key: '',
-     relationships_cache_key: '', is_member_of?: false, follows?: false,
+     relationships_cache_key: '', is_member_of?: false,
      each_friend: nil, is_last_admin?: false, is_last_admin_leaving?: false,
      leave: nil, last_notification: nil, notification_time: 0, notifier: nil,
      remove_suggestion: nil, allow_invitation_from?: false,
@@ -274,25 +263,15 @@ class ExternalPerson < ActiveRecord::Base
     if person_instance_methods.keys.include?(method)
       return person_instance_methods[method]
     end
-    if profile_instance_methods.keys.include? method
-      return profile_instance_methods[method]
-    end
+    super(method, *args, &block)
   end
 
   def respond_to_missing?(method_name, include_private = false)
     person_instance_methods.keys.include?(method_name) ||
-    profile_instance_methods.keys.include?(method_name) ||
     super
   end
 
-  private
-
-  def generate_derivated_methods(methods)
-    derivated_methods = {}
-    methods.keys.each do |method|
-      derivated_methods[method.to_s.insert(-1, '?').to_sym] = false
-      derivated_methods[method.to_s.insert(-1, '=').to_sym] = nil
-    end
-    derivated_methods
+  def kind_of?(klass)
+    (klass == Person) ? true : super
   end
 end
