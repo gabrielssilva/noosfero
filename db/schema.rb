@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160705162914) do
+ActiveRecord::Schema.define(version: 20160913115151) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -833,9 +833,10 @@ ActiveRecord::Schema.define(version: 20160705162914) do
     t.integer  "responsible_id"
     t.integer  "closed_by_id"
     t.string   "reported_type"
+    t.string   "requestor_type",            default: "Profile"
   end
 
-  add_index "tasks", ["requestor_id"], name: "index_tasks_on_requestor_id", using: :btree
+  add_index "tasks", ["requestor_id", "requestor_type"], name: "index_tasks_on_requestor_id_and_requestor_type", using: :btree
   add_index "tasks", ["spam"], name: "index_tasks_on_spam", using: :btree
   add_index "tasks", ["status"], name: "index_tasks_on_status", using: :btree
   add_index "tasks", ["target_id", "target_type"], name: "index_tasks_on_target_id_and_target_type", using: :btree
