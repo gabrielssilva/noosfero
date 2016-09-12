@@ -109,7 +109,6 @@ class TasksController < MyProfileController
   protected
 
   def filter_tasks(filter, tasks)
-    tasks = tasks.eager_load(:requestor, :closed_by)
     tasks = tasks.of(filter[:type].presence)
     tasks = tasks.where(:status => filter[:status]) unless filter[:status].blank?
 
@@ -124,8 +123,8 @@ class TasksController < MyProfileController
     tasks = tasks.from_closed_date filter[:closed_from] unless filter[:closed_from].blank?
     tasks = tasks.until_closed_date filter[:closed_until] unless filter[:closed_until].blank?
 
-    tasks = tasks.where('profiles.name LIKE ?', filter[:requestor]) unless filter[:requestor].blank?
-    tasks = tasks.where('closed_bies_tasks.name LIKE ?', filter[:closed_by]) unless filter[:closed_by].blank?
+    tasks = tasks.requested_by(filter[:requestor]) unless filter[:requestor].blank?
+    tasks = tasks.closed_by_person(filter[:closed_by]) unless filter[:closed_by].blank?
     tasks = tasks.where('tasks.data LIKE ?', "%#{filter[:text]}%") unless filter[:text].blank?
     tasks
   end

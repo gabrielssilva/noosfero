@@ -10,6 +10,8 @@ class ExternalPerson < ActiveRecord::Base
 
   attr_accessible :source, :email, :created_at
 
+  has_many :requested_tasks, :class_name => 'Task', :as => :requestor, :dependent => :destroy
+
   def self.get_or_create(webfinger)
     user = ExternalPerson.find_by(identifier: webfinger.identifier, source: webfinger.domain)
     if user.nil?
@@ -170,9 +172,8 @@ class ExternalPerson < ActiveRecord::Base
      enterprises: Enterprise.none, communities: Community.none, friends:
      Person.none, memberships: Profile.none, friendships: Person.none,
      following_articles: Article.none, article_followers: ArticleFollower.none,
-     requested_tasks: Task.none, mailings: Mailing.none, scraps_sent:
-     Scrap.none, favorite_enterprise_people: FavoriteEnterprisePerson.none,
-     favorite_enterprises: Enterprise.none, acepted_forums: Forum.none,
+     mailings: Mailing.none, scraps_sent: Scrap.none, favorite_enterprises: Enterprise.none,
+     favorite_enterprise_people: FavoriteEnterprisePerson.none, acepted_forums: Forum.none,
      articles_with_access: Article.none, suggested_profiles:
      ProfileSuggestion.none, suggested_people: ProfileSuggestion.none,
      suggested_communities: ProfileSuggestion.none, user: nil,

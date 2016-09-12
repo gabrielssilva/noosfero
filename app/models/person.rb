@@ -99,7 +99,7 @@ class Person < Profile
     joins(:user).where("users.chat_status != '' AND users.chat_status_at >= ?", DateTime.now - User.expires_chat_status_every.minutes)
   }
 
-  has_many :requested_tasks, :class_name => 'Task', :foreign_key => :requestor_id, :dependent => :destroy
+  has_many :requested_tasks, :class_name => 'Task', :as => :requestor, :dependent => :destroy
 
   has_many :mailings
 

@@ -34,7 +34,7 @@ class Task < ApplicationRecord
 
   include Noosfero::Plugin::HotSpot
 
-  belongs_to :requestor, :class_name => 'Profile', :foreign_key => :requestor_id
+  belongs_to :requestor, :polymorphic => true
   belongs_to :target, :foreign_key => :target_id, :polymorphic => true
   belongs_to :responsible, :class_name => 'Person', :foreign_key => :responsible_id
   belongs_to :closed_by, :class_name => 'Person', :foreign_key => :closed_by_id
@@ -350,6 +350,18 @@ class Task < ApplicationRecord
 
   scope :until_creation_date, -> created_until {
     where('tasks.created_at <= ?', created_until.end_of_day) unless created_until.blank?
+  }
+
+
+  scope :requested_by, -> requestor {
+    joins("JOIN profiles ON profiles.id = tasks.requestor_id")
+    .joins("LEFT OUTER JOIN external_people ON external_people.id = tasks.requestor_id")
+    .where('profiles.name LIKE ? OR external_people.name LIKE ?', requestor, requestor)
+  }
+
+  scope :closed_by_person, -> person {
+    joins("JOIN profiles AS c_p ON c_p.id = tasks.closed_by_id")
+    .where('c_p.name LIKE ?', person)
   }
 
   def self.pending_types_for(profile)
