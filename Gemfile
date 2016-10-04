@@ -61,6 +61,10 @@ group :development, :test do
   gem 'spring'
 end
 
+group :test, :cucumber do
+  gem 'webmock', '1.19.0'
+end
+
 group :test do
   gem 'rspec',                  '~> 3.3', require: false
   gem 'rspec-rails',            '~> 3.2', require: false
