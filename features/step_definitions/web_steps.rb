@@ -298,3 +298,10 @@ When /^(?:|I )wait ([^ ]+) seconds?(?:| .+)$/ do |seconds|
   sleep seconds.to_f
 end
 
+STUB_RESPONSES = {
+  :valid_webfinger_response => '{"properties":{"identifier":"adminuser","created_at":"2016-08-18T12:43:14.817Z"},"titles":{"name":"adminuser"}}'
+}
+
+Given /^I stub "(.+)" to return "(.+)"$/ do |url,type|
+  WebMock.stub_request(:any, /#{url}/).with(:body => STUB_RESPONSES[type.to_sym])
+end
