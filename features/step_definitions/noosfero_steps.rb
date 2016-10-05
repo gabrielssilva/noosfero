@@ -703,7 +703,7 @@ end
 
 Then /^I should be externally logged in as "([^@]+)@(.+)"$/ do |username, domain|
   visit '/'
-  url = 'http://' + domain + '/' + username
+  url = "http://#{domain}/profile/#{username}"
   page.should have_xpath("//a[@href=\"#{url}\"]")
 end
 

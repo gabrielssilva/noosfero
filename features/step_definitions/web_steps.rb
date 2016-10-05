@@ -299,9 +299,10 @@ When /^(?:|I )wait ([^ ]+) seconds?(?:| .+)$/ do |seconds|
 end
 
 STUB_RESPONSES = {
-  :valid_webfinger_response => '{"properties":{"identifier":"adminuser","created_at":"2016-08-18T12:43:14.817Z"},"titles":{"name":"adminuser"}}'
+  :valid_webfinger_response => '{"properties":{"identifier":"joaosilva","created_at":"2016-08-18T12:43:14.817Z"},"titles":{"name":"adminuser"}}',
+  :valid_login_response => '{"user":{"email":"joaosilva@federated.noosfero.org"}}'
 }
 
 Given /^I stub "(.+)" to return "(.+)"$/ do |url,type|
-  WebMock.stub_request(:any, /#{url}/).with(:body => STUB_RESPONSES[type.to_sym])
+  WebMock.stub_request(:any, /#{url}/).to_return(:body => STUB_RESPONSES[type.to_sym])
 end

@@ -14,7 +14,8 @@ Feature: external login
       | joaosilva@federated.noosfero.org |
     And I am not logged in
     And I go to the homepage
-    And I stub "federated.noosfero.org/.*" to return "valid_webfinger_response"
+    And I stub "federated.noosfero.org/\.well-known/.*" to return "valid_webfinger_response"
+    And I stub "federated.noosfero.org/api/v1/login" to return "valid_login_response"
     And I follow "Login"
     And I fill in the following:
       | Username / Email | joaosilva@federated.noosfero.org |
