@@ -42,18 +42,18 @@ class MultiTenancyTest < ActiveSupport::TestCase
   end
 
   def test_load_map
-    YAML.expects(:load_file).returns(db_config)
+    YAML.expects(:load).returns(db_config)
     assert_equal({ 'test.one.com' => 'one', 'one.com' => 'one', 'two.com' => 'two' }, Noosfero::MultiTenancy.send(:load_map))
   end
 
   def test_if_is_hosted_environment
-    YAML.expects(:load_file).returns(db_config)
+    YAML.expects(:load).returns(db_config)
     Rails.stubs(:env).returns('one_test')
     assert Noosfero::MultiTenancy.send(:is_hosted_environment?)
   end
 
   def test_if_is_not_hosted_environment
-    YAML.expects(:load_file).returns(db_config)
+    YAML.expects(:load).returns(db_config)
     refute Noosfero::MultiTenancy.send(:is_hosted_environment?)
   end
 
