@@ -23,6 +23,7 @@ Build-Depends: cucumber,
                ruby-rspec-rails (>= 3),
                ruby-selenium-webdriver,
                ruby-will-paginate (>> 3.0.5-1),
+               ruby-webmock,
                tango-icon-theme,
                xvfb
 Standards-Version: 3.8.4
