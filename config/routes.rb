@@ -133,6 +133,13 @@ Noosfero::Application.routes.draw do
   plugins_routes = File.join(File.dirname(__FILE__) + '/../lib/noosfero/plugin/routes.rb')
   eval(IO.read(plugins_routes), binding, plugins_routes)
 
+  ######################################################
+  # Federation endpoints
+  ######################################################
+
+  mount DiasporaFederation::Engine => "/diaspora"
+
+
   # cache stuff - hack
   match 'public/:action/:id', controller: 'public', via: :all
 

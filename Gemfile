@@ -53,6 +53,9 @@ gem 'rails-observers'
 gem 'actionpack-page_caching'
 gem 'actionpack-action_caching'
 
+# federation
+gem 'diaspora_federation-rails', '0.1.5'
+
 group :production do
   gem 'dalli', '~> 2.7.0'
 end
