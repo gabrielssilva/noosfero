@@ -1,1 +1,10 @@
+<h1><%= _("Sign in with OpenID") %></h1>
 
+<%= form_for :provider, url: { action: :discover } do |f| %>
+  <%= labelled_form_field(_("OpenID Provider host"), f.text_field(:host)) %>
+
+  <div class="button-bar">
+    <%= link_to _("Go back"), root_path, class: "button icon-cancel with-text" %>
+    <%= f.submit _("Discover"), class: "button with-text icon-ok submit" %>
+  </div>
+<% end %>
