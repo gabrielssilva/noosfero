@@ -9,6 +9,7 @@ class AddsProviders < ActiveRecord::Migration
       t.string :token_endpoint
       t.string :userinfo_endpoint
       t.datetime :expires_at
+      t.timestamps
     end
   end
 

@@ -72,15 +72,6 @@ class OpenidClientPlugin::Provider < ApplicationRecord
     client.redirect_uri = redirect_uri
     client.authorization_code = code
 
-    access_token = client.access_token!(self.auth_method)
-    decoded_token = OpenIDConnect::ResponseObject::IdToken.decode(access_token.id_token,
-                                                                  self.config.jwks)
-    decoded_token.verify!(
-      issuer: issuer,
-      client_id: identifier,
-      nonce: nonce
-    )
-
-    # TODO: create a Profile
+    client.access_token!(self.auth_method).userinfo!
   end
 end
