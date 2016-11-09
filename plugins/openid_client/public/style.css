@@ -1,0 +1,15 @@
+#user #homepage-link i {
+  background-size: 18px 18px;
+}
+
+#openid_client_plugin_options {
+  margin-top: 10px;
+}
+
+.controller-openid_client_plugin #provider-form br {
+  clear: both;
+}
+
+.controller-openid_client_plugin #provider-form .formfield.type-text input {
+  width: 70%;
+}

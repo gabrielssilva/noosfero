@@ -8,6 +8,10 @@ class OpenidClientPlugin < Noosfero::Plugin
     _("Turns Noosfero into an OpenID Relaying Party.")
   end
 
+  def stylesheet?
+    true
+  end
+
   def login_extra_contents
     proc do
       render partial: "auth/openid_login_extra_content"
