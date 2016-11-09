@@ -14,6 +14,6 @@ class AddsProviders < ActiveRecord::Migration
   end
 
   def down
-    drop_table :openid_client_plugin_providers 
+    drop_table :openid_client_plugin_providers
   end
 end

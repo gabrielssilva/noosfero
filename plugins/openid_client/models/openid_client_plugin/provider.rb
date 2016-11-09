@@ -52,6 +52,10 @@ class OpenidClientPlugin::Provider < ApplicationRecord
     )
   end
 
+  def supported_scopes
+    config.scopes_supported & ["name", "profile", "nickname", "picture"]
+  end
+
   def authorization_uri(redirect_uri, nonce)
     # TODO: request different scopes for each provider
     client.redirect_uri = redirect_uri
@@ -59,7 +63,7 @@ class OpenidClientPlugin::Provider < ApplicationRecord
       response_type: :code,
       nonce: nonce,
       state: nonce,
-      scope: ["name", "nickname", "picture"]
+      scope: self.supported_scopes
     )
   end
 
@@ -68,10 +72,28 @@ class OpenidClientPlugin::Provider < ApplicationRecord
     auth_methods.try(:include?, 'client_secret_basic') ? :basic : :post
   end
 
-  def authenticate(redirect_uri, code, nonce)
+
+  def authenticate(redirect_uri, code)
     client.redirect_uri = redirect_uri
     client.authorization_code = code
 
-    client.access_token!(self.auth_method).userinfo!
+    userinfo = client.access_token!(self.auth_method).userinfo!
+    p userinfo
+    user_data(userinfo)
+  end
+
+  private
+
+  def user_data(userinfo)
+    identifier = userinfo.nickname.to_slug
+    OpenStruct.new(
+      identifier: identifier,
+      profile: userinfo.profile,
+      picture: userinfo.picture,
+      name: userinfo.name,
+      domain: self.name,
+      email: userinfo.email || "#{identifier}@#{self.name}",
+      created_at: Time.now
+    )
   end
 end
