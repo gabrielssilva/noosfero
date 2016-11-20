@@ -229,6 +229,7 @@ class Environment < ApplicationRecord
   has_many :organizations
   has_many :enterprises
   has_many :people
+  has_many :external_people
   has_many :communities
   has_many :licenses
 

@@ -7,13 +7,18 @@ module ProfileEntity
     validates_presence_of :identifier, :name
 
     belongs_to :environment
+    belongs_to :preferred_domain, :class_name => 'Domain', :foreign_key => 'preferred_domain_id'
+
     has_many :search_terms, :as => :context
     has_many :abuse_complaints, :as => :reported, :foreign_key => 'requestor_id', :dependent => :destroy
+    has_many :domains, :as => :owner
 
     before_create :set_default_environment
 
     scope :recent, -> limit=nil { order('id DESC').limit(limit) }
-
+    scope :more_popular, -> { }
+    scope :more_active, -> { order 'activities_count DESC' }
+    scope :more_recent, -> { order "created_at DESC" }
   end
 
   def disable

@@ -5,10 +5,17 @@ class ExternalPerson < ExternalProfile
   include ProfileEntity
   include Follower
 
+  SEARCH_FILTERS = {
+    :order => %w[more_recent more_popular more_active],
+    :display => %w[compact]
+  }
+
   validates_uniqueness_of :identifier, scope: :source
   validates_presence_of :source, :email, :created_at
 
   attr_accessible :source, :email, :created_at
+
+  scope :visible, -> { }
 
   def self.get_or_create(webfinger)
     user = ExternalPerson.find_by(identifier: webfinger.identifier, source: webfinger.domain)

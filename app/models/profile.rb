@@ -218,10 +218,19 @@ class Profile < ApplicationRecord
   scope :is_public, -> { where visible: true, public_profile: true, secret: false }
   scope :enabled, -> { where enabled: true }
 
-  # subclass specific
-  scope :more_popular, -> { }
-  scope :more_active, -> { order 'activities_count DESC' }
-  scope :more_recent, -> { order "created_at DESC" }
+  scope :followed_by, -> person{
+    distinct.select('profiles.*').
+    joins('left join profiles_circles ON profiles_circles.profile_id = profiles.id').
+    joins('left join circles ON circles.id = profiles_circles.circle_id').
+    where('circles.person_id = ?', person.id)
+  }
+
+  scope :in_circle, -> circle{
+    distinct.select('profiles.*').
+    joins('left join profiles_circles ON profiles_circles.profile_id = profiles.id').
+    joins('left join circles ON circles.id = profiles_circles.circle_id').
+    where('circles.id = ?', circle.id)
+  }
 
   settings_items :allow_followers, :type => :boolean, :default => true
   alias_method :allow_followers?, :allow_followers
@@ -285,9 +294,6 @@ class Profile < ApplicationRecord
   ]
 
   belongs_to :user
-
-  has_many :domains, :as => :owner
-  belongs_to :preferred_domain, :class_name => 'Domain', :foreign_key => 'preferred_domain_id'
 
   has_many :articles, :dependent => :destroy
   belongs_to :home_page, :class_name => Article.name, :foreign_key => 'home_page_id'

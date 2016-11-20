@@ -208,6 +208,22 @@ module Noosfero::Factory
   end
 
   ###############################################
+  # ExternalPerson
+  ###############################################
+
+  def defaults_for_external_person
+    n = factory_num_seq.to_s
+    {
+      :identifier => "external-person-#{n}",
+      :name => "ExternalPerson #{n}",
+      :email => "external-peson-#{n}@localhost",
+      :source => 'localhost',
+      :environment_id => 1,
+      :created_at => DateTime.now
+    }
+  end
+
+  ###############################################
   # Profile
   ###############################################
 
@@ -441,5 +457,6 @@ module Noosfero::Factory
     slug = name.to_slug
     { :name => name, :url => "#{slug}.org", :slug => slug, :environment_id => 1}
   end
+
 
 end

@@ -118,6 +118,31 @@ class SearchControllerTest < ActionController::TestCase
     assert_equivalent [p2,p1], assigns(:searches)[:people][:results]
   end
 
+  should 'also list external people' do
+    Profile.delete_all
+    person = create_user('local1').person
+    external_person = fast_create(ExternalPerson)
+
+    get :people
+    assert_equivalent [person, external_person], assigns(:searches)[:people][:results]
+  end
+
+  should 'paginate people and external_people correctly' do
+    Profile.delete_all
+    person1 = create_user('local1').person
+    external_person1 = fast_create(ExternalPerson)
+    external_person2 = fast_create(ExternalPerson)
+
+    # Limits "per_page" on search result
+    @controller.stubs(:limit).returns(2)
+
+    get :people, page: 1
+    assert_equivalent [person1, external_person2], assigns(:searches)[:people][:results]
+
+    get :people, page: 2
+    assert_equivalent [external_person1], assigns(:searches)[:people][:results]
+  end
+
   should 'find communities' do
     c1 = create_profile_with_optional_category(Community, 'a beautiful community')
     get :communities, :query => 'beautiful'

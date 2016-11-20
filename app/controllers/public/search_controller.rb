@@ -73,12 +73,22 @@ class SearchController < PublicController
   end
 
   def people
+    # TODO: if the query contains an @ symbol, fetch with webfinger
+
     @scope = visible_profiles(Person)
-    full_text_search
+    local_people = full_text_search({ page: 1, per_page: Person.count })
+
+    @scope = visible_profiles(ExternalPerson)
+    external_people = full_text_search({ page: 1, per_page: ExternalPerson.count })
+
+    # TODO: apply filter over the complete list
+    # The lists were only filtered individually at this point
+    all_people = local_people[:results] + external_people[:results]
+    @searches[@asset] = {results: all_people.paginate(paginate_options)}
   end
 
   def enterprises
-    @scope = visible_profiles(Enterprise)
+    @scope = visible_profiles(Enterprise, :image)
     full_text_search
   end
 
@@ -89,7 +99,7 @@ class SearchController < PublicController
   end
 
   def communities
-    @scope = visible_profiles(Community)
+    @scope = visible_profiles(Community, :image)
     full_text_search
   end
 
@@ -238,14 +248,14 @@ class SearchController < PublicController
     { :per_page => limit, :page => page }
   end
 
-  def full_text_search
-    @searches[@asset] = find_by_contents(@asset, environment, @scope, @query, paginate_options, {:category => @category, :filter => @order, :template_id => params[:template_id]})
+  def full_text_search(custom_paginate_options = paginate_options)
+    @searches[@asset] = find_by_contents(@asset, environment, @scope, @query, custom_paginate_options, {:category => @category, :filter => @order, :template_id => params[:template_id]})
   end
 
   private
 
   def visible_profiles(klass, *extra_relations)
-    relations = [:image, :domains, :environment, :preferred_domain]
+    relations = [:domains, :environment, :preferred_domain]
     relations += extra_relations
     if current_user && current_person.is_admin?
       @environment.send(klass.name.underscore.pluralize).includes(relations)

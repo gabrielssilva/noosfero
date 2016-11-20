@@ -1,0 +1,5 @@
+<% filter_label = external_person.send(@order + '_label') %>
+<% filter_label += show_date(external_person.created_at) if @order == 'more_recent' %>
+<li class="search-profile-item">
+  <%= profile_image_link external_person, :portrait, 'div', filter_label %>
+</li>
