@@ -73,11 +73,14 @@ class SearchController < PublicController
   end
 
   def people
-    # TODO: if the query contains an @ symbol, fetch with webfinger
+    if @query.include? '@'
+      Federation::Diaspora.webfinger_lookup(@query) if @query.include? '@'
+      # TODO: improve the search to filter with the domain
+      @query = @query.split('@').first
+    end
 
     @scope = visible_profiles(Person)
     local_people = full_text_search({ page: 1, per_page: Person.count })
-
     @scope = visible_profiles(ExternalPerson)
     external_people = full_text_search({ page: 1, per_page: ExternalPerson.count })
 

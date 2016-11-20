@@ -11,7 +11,16 @@ DiasporaFederation.configure do |config|
     end
 
     on :save_person_after_webfinger do |person|
-      # ...
+      identifier, domain = person.profile.author.split('@')
+      name = "#{person.profile.first_name} #{person.profile.last_name}"
+
+      ExternalPerson.get_or_create(OpenStruct.new(
+        identifier: identifier,
+        name: name.blank? ? identifier : name,
+        domain: domain,
+        email: "#{identifier}@#{domain}",
+        created_at: Time.now
+      ))
     end
 
     on :fetch_private_key do |diaspora_id|
