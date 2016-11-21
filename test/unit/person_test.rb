@@ -1952,4 +1952,22 @@ class PersonTest < ActiveSupport::TestCase
     person.user.expects(:save!).never
     person.save!
   end
+
+  should 'create a RSA key pair when requesting one of the keys' do
+    person = create_user('testuser').person
+
+    assert person.public_key.present?
+    assert person.private_key.present?
+  end
+
+  should 'generate a key pair only once' do
+    person = create_user('testuser').person
+    person.expects(:generate_keys).once
+
+    person.expects(:has_both_keys?).returns(false).once
+    person.public_key
+
+    person.expects(:has_both_keys?).returns(true).once
+    person.private_key
+  end
 end

@@ -4,7 +4,12 @@ class Person < Profile
   include Human
   include Follower
 
-  attr_accessible :organization, :contact_information, :sex, :birth_date, :cell_phone, :comercial_phone, :jabber_id, :personal_website, :nationality, :address_reference, :district, :schooling, :schooling_status, :formation, :custom_formation, :area_of_study, :custom_area_of_study, :professional_activity, :organization_website, :following_articles
+  attr_accessible :organization, :contact_information, :sex, :birth_date,
+                  :cell_phone, :comercial_phone, :jabber_id, :personal_website,
+                  :nationality, :address_reference, :district, :schooling,
+                  :schooling_status, :formation, :custom_formation, :area_of_study,
+                  :custom_area_of_study, :professional_activity, :organization_website,
+                  :following_articles, :private_key, :public_key
 
   SEARCH_FILTERS = {
     :order => %w[more_recent more_popular more_active],
@@ -575,4 +580,28 @@ class Person < Profile
     self.is_a_friend?(person) || super
   end
 
+  def private_key
+    generate_keys unless has_both_keys?
+    self[:private_key]
+  end
+
+  def public_key
+    generate_keys unless has_both_keys?
+    self[:public_key]
+  end
+
+  private
+
+  def has_both_keys?
+    self[:private_key].present? && self[:public_key].present?
+  end
+
+  def generate_keys
+    # TODO: extract keysize to conf file
+    keys = OpenSSL::PKey::RSA.generate(4096)
+    update_attributes(
+      public_key: keys.public_key.to_s,
+      private_key: keys.to_s
+    )
+  end
 end
