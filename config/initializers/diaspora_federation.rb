@@ -1,3 +1,5 @@
+require 'typhoeus'
+
 DiasporaFederation.configure do |config|
   config.server_uri = URI('http://localhost:3000')
 
@@ -20,7 +22,11 @@ DiasporaFederation.configure do |config|
         domain: domain,
         email: "#{identifier}@#{domain}",
         created_at: Time.now
-      ))
+      ), {
+        guid: person.guid,
+        public_key: person.exported_key
+        # TODO: adds profile image url
+      })
     end
 
     on :fetch_private_key do |diaspora_id|

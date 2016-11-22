@@ -34,7 +34,8 @@ class Circle < ApplicationRecord
       _("Person") => Person.name,
       _("Community") => Community.name,
       _("Enterprise") => Enterprise.name,
-      _("Organization") => Organization.name
+      _("Organization") => Organization.name,
+      _("External Person") => ExternalPerson.name
     }
   end
 

@@ -810,6 +810,10 @@ private :generate_url, :url_options
     end
   end
 
+  def remote?
+    false
+  end
+
   def public?
     visible && public_profile
   end

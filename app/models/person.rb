@@ -582,12 +582,12 @@ class Person < Profile
 
   def private_key
     generate_keys unless has_both_keys?
-    self[:private_key]
+    OpenSSL::PKey::RSA.new(self[:private_key]) if self[:private_key]
   end
 
   def public_key
     generate_keys unless has_both_keys?
-    self[:public_key]
+    OpenSSL::PKey::RSA.new(self[:public_key]) if self[:public_key]
   end
 
   private

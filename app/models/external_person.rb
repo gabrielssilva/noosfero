@@ -13,19 +13,20 @@ class ExternalPerson < ExternalProfile
   validates_uniqueness_of :identifier, scope: :source
   validates_presence_of :source, :email, :created_at
 
-  attr_accessible :source, :email, :created_at
+  attr_accessible :source, :email, :created_at, :guid, :public_key
 
   scope :visible, -> { }
 
-  def self.get_or_create(webfinger)
+  def self.get_or_create(webfinger, additional_data = {})
     user = ExternalPerson.find_by(identifier: webfinger.identifier, source: webfinger.domain)
     if user.nil?
-      user = ExternalPerson.create!(identifier: webfinger.identifier,
-                                    name: webfinger.name,
-                                    source: webfinger.domain,
-                                    email: webfinger.email,
-                                    created_at: webfinger.created_at
-                                   )
+      user = ExternalPerson.create!({
+        identifier: webfinger.identifier,
+        name: webfinger.name,
+        source: webfinger.domain,
+        email: webfinger.email,
+        created_at: webfinger.created_at
+      }.merge(additional_data))
     end
     user
   end
@@ -95,6 +96,10 @@ class ExternalPerson < ExternalProfile
     true
   end
 
+  def remote?
+    true
+  end
+
   def contact_email(*args)
     self.email
   end
@@ -120,6 +125,14 @@ class ExternalPerson < ExternalProfile
 
   def name
     "#{self[:name]}@#{self.source}"
+  end
+
+  def diaspora_handle
+    "#{self[:identifier]}@#{self.source}"
+  end
+
+  def public_key
+    OpenSSL::PKey::RSA.new(self[:public_key])
   end
 
   class ExternalPerson::Image
@@ -201,7 +214,8 @@ class ExternalPerson < ExternalProfile
      remove_suggestion: nil, allow_invitation_from?: false,
      tracked_actions: ActionTracker::Record.none, follow: [],
      update_profile_circles: ProfileFollower.none, unfollow: ProfileFollower.none,
-     remove_profile_from_circle: ProfileFollower.none, followed_profiles: Profile.none
+     remove_profile_from_circle: ProfileFollower.none, followed_profiles: Profile.none,
+     private_key: nil
     }
 
     derivated_methods = generate_derivated_methods(methods_and_responses)

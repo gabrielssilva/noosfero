@@ -162,4 +162,15 @@ class ExternalPersonTest < ActiveSupport::TestCase
     end
   end
 
+  should 'accept additional attrs when creating with a struct' do
+    person = ExternalPerson.get_or_create(OpenStruct.new(
+      identifier: "johndoe",
+      name: "John Doe",
+      domain: "doe.org",
+      email: "doe@mail.com",
+      created_at: Time.now
+    ), { guid: "azd12asd2332532qwdfadsf"})
+
+    assert_equal person.guid, "azd12asd2332532qwdfadsf"
+  end
 end

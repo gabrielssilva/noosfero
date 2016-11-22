@@ -6,6 +6,10 @@ module Follower
   end
 
   def follow(profile, circles)
+    if profile.remote?
+      Delayed::Job.enqueue FollowRemotePersonJob.new(self, profile)
+    end
+
     circles = [circles] unless circles.is_a?(Array)
     circles.each do |new_circle|
       next if new_circle.owner != self || !profile.kind_of?(new_circle.profile_type.constantize)
