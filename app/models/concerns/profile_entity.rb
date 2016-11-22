@@ -13,13 +13,19 @@ module ProfileEntity
     has_many :abuse_complaints, :as => :reported, :foreign_key => 'requestor_id', :dependent => :destroy
     has_many :domains, :as => :owner
 
+    extend ActsAsHavingBoxes::ClassMethods
+    acts_as_having_boxes
+
     before_create :set_default_environment
+    after_create :create_default_set_of_boxes
 
     scope :recent, -> limit=nil { order('id DESC').limit(limit) }
     scope :more_popular, -> { }
     scope :more_active, -> { order 'activities_count DESC' }
     scope :more_recent, -> { order "created_at DESC" }
   end
+
+  NUMBER_OF_BOXES = 4
 
   def disable
     self.visible = false

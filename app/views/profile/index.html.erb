@@ -26,12 +26,14 @@
             <% tabs << {:title => _('Wall'), :id => 'profile-wall', :content => (render :partial => 'profile_wall')} %>
           <% end %>
           <% tabs << {:title => _('Profile'), :id => 'organization-profile', :content => (render :partial => 'organization_profile')} %>
-        <% elsif @profile.person? %>
+        <% elsif @profile.person? && !@profile.remote? %>
           <% if logged_in? && current_person.follows?(@profile) %>
             <% tabs << {:title => _('Wall'), :id => 'profile-wall', :content => (render :partial => 'profile_wall')} %>
             <% tabs << {:title => _('Network'), :id => 'profile-network', :content => (render :partial => 'profile_network')} %>
           <% end %>
           <% tabs << {:title => _('Profile'), :id => 'person-profile', :content => (render :partial => 'person_profile')} %>
+        <% elsif @profile.person? && @profile.remote? %>
+          <!-- TODO: content for external profiles -->
         <% end %>
 
         <% tabs += plugins_tabs.select { |tab| !tab[:start] } %>

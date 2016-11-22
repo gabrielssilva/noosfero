@@ -80,7 +80,7 @@ def profile_instance_methods
      copy_article_tree: nil, copy_article?: false, add_member: false,
      remove_member: false, add_admin: false, remove_admin: false, add_moderator:
      false, display_info_to?: true, update_category_from_region: nil,
-     accept_category?: false, custom_header_expanded: '',
+     accept_category?: false, custom_header_expanded: '', theme: nil,
      custom_footer_expanded: '', public?: true, themes: [], find_theme: nil,
      blogs: Blog.none, blog: nil, has_blog?: false, forums: Forum.none, forum:
      nil, has_forum?: false, admins: [], settings_field: {}, setting_changed:

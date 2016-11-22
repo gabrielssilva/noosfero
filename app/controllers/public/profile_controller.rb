@@ -74,7 +74,6 @@ class ProfileController < PublicController
 
   def following
     @followed_people = profile.followed_profiles.paginate(:per_page => per_page, :page => params[:npage], :total_entries => profile.followed_profiles.count)
-    puts "FOLLOWED_PEOPLE: #{@followed_people.map(&:name)}"
     return @followed_people
   end
 

@@ -204,9 +204,6 @@ class Profile < ApplicationRecord
   settings_items :email_suggestions, :type => :boolean, :default => false
   settings_items :profile_admin_mail_notification, :type => :boolean, :default => true
 
-  extend ActsAsHavingBoxes::ClassMethods
-  acts_as_having_boxes
-
   acts_as_taggable
 
   def self.qualified_column_names
@@ -428,9 +425,6 @@ class Profile < ApplicationRecord
       errors.add(:template, _('is not a template.'))
     end
   end
-
-  # registar callback for creating boxes after the object is created.
-  after_create :create_default_set_of_boxes
 
   # creates the initial set of boxes when the profile is created. Can be
   # overriden for each subclass to create a custom set of boxes for its

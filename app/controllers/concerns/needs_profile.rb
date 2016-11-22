@@ -24,6 +24,7 @@ module NeedsProfile
     if params[:profile]
       params[:profile].downcase!
       @profile ||= environment.profiles.where(identifier: params[:profile]).first
+      @profile ||= environment.external_people.where(identifier: params[:profile]).first
     end
 
     if @profile

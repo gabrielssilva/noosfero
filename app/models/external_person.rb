@@ -31,10 +31,32 @@ class ExternalPerson < ExternalProfile
     user
   end
 
+  def create_default_set_of_boxes
+    NUMBER_OF_BOXES.times do
+      self.boxes << Box.new
+    end
+
+    default_set_of_blocks.each_with_index do |blocks,i|
+      blocks.each do |block|
+        self.boxes[i].blocks << block
+      end
+    end
+  end
+
+  def default_set_of_blocks
+    [
+      [MainBlock.new],
+      [ProfileImageBlock.new(:show_name => true)],
+    ]
+  end
+
   def privacy_setting
     _('Public profile')
   end
 
+  def url
+    "/profile/#{self.identifier}"
+  end
 
   alias :public_profile_url :url
 
@@ -155,6 +177,10 @@ class ExternalPerson < ExternalProfile
     ExternalPerson::Image.new(avatar)
   end
 
+  def allow_followers?
+    true
+  end
+
   def data_hash(gravatar_default = nil)
     friends_list = {}
     {
@@ -194,15 +220,14 @@ class ExternalPerson < ExternalProfile
      suggested_friend_groups: [], friend_groups: [], add_friend: nil,
      already_request_friendship?: false, remove_friend: nil,
      presence_of_required_fields: nil, active_fields: [], required_fields: [],
-     signup_fields: [], default_set_of_blocks: [], default_set_of_boxes: [],
-     default_set_of_articles: [], cell_phone: nil, comercial_phone: nil,
-     nationality: nil, schooling: nil, contact_information: nil, sex: nil,
-     birth_date: nil, jabber_id: nil, personal_website: nil, address_reference:
-     nil, district: nil, schooling_status: nil, formation: nil,
-     custom_formation: nil, area_of_study: nil, custom_area_of_study: nil,
-     professional_activity: nil, organization_website: nil, organization: nil,
-     photo: nil, city: nil, state: nil, country: nil, zip_code: nil,
-     address_line2: nil, copy_communities_from: nil,
+     signup_fields: [], default_set_of_boxes: [], default_set_of_articles: [],
+     cell_phone: nil, comercial_phone: nil, nationality: nil, schooling: nil,
+     contact_information: nil, sex: nil, birth_date: nil, jabber_id: nil,
+     personal_website: nil, address_reference: nil, district: nil,
+     schooling_status: nil, formation: nil, custom_formation: nil, area_of_study: nil,
+     custom_area_of_study: nil, professional_activity: nil, organization_website: nil,
+     organization: nil, photo: nil, city: nil, state: nil, country: nil, zip_code: nil,
+     address_line2: nil, copy_communities_from: nil, private_key: nil,
      has_organization_pending_tasks?: false, organizations_with_pending_tasks:
      Organization.none, pending_tasks_for_organization: Task.none,
      build_contact: nil, is_a_friend?: false, ask_to_join?: false, refuse_join:
@@ -214,66 +239,7 @@ class ExternalPerson < ExternalProfile
      remove_suggestion: nil, allow_invitation_from?: false,
      tracked_actions: ActionTracker::Record.none, follow: [],
      update_profile_circles: ProfileFollower.none, unfollow: ProfileFollower.none,
-     remove_profile_from_circle: ProfileFollower.none, followed_profiles: Profile.none,
-     private_key: nil
-    }
-
-    derivated_methods = generate_derivated_methods(methods_and_responses)
-    derivated_methods.merge(methods_and_responses)
-  end
-
-  def profile_instance_methods
-    methods_and_responses = {
-     role_assignments: RoleAssignment.none, favorite_enterprises:
-     Enterprise.none, memberships: Profile.none, friendships: Profile.none,
-     tasks: Task.none, suggested_profiles: ProfileSuggestion.none,
-     suggested_people: ProfileSuggestion.none, suggested_communities:
-     ProfileSuggestion.none, public_profile: true, nickname: nil, custom_footer:
-     '', custom_header: '', address: '', zip_code: '', contact_phone: '',
-     image_builder: nil, description: '', closed: false, template_id: nil, lat:
-     nil, lng: nil, is_template: false, fields_privacy: {}, preferred_domain_id:
-     nil, category_ids: [], country: '', city: '', state: '',
-     national_region_code: '', redirect_l10n: false, notification_time: 0,
-     custom_url_redirection: nil, email_suggestions: false,
-     allow_members_to_invite: false, invite_friends_only: false, secret: false,
-     profile_admin_mail_notification: false, redirection_after_login: nil,
-     profile_activities: ProfileActivity.none, action_tracker_notifications:
-     ActionTrackerNotification.none, tracked_notifications:
-     ActionTracker::Record.none, scraps_received: Scrap.none, template:
-     Profile.none, comments_received: Comment.none, email_templates:
-     EmailTemplate.none, members: Profile.none, members_like: Profile.none,
-     members_by: Profile.none, members_by_role: Profile.none, scraps:
-     Scrap.none, welcome_page_content: nil, settings: {}, find_in_all_tasks:
-     nil, top_level_categorization: {}, interests: Category.none, geolocation:
-     '', country_name: '', pending_categorizations: [], add_category: false,
-     create_pending_categorizations: false, top_level_articles: Article.none,
-     valid_identifier: true, valid_template: false, create_default_set_of_boxes:
-     true, copy_blocks_from: nil, default_template: nil,
-     template_without_default: nil, template_with_default: nil, apply_template:
-     false, iframe_whitelist: [], recent_documents: Article.none, last_articles:
-     Article.none, is_validation_entity?: false, hostname: nil, own_hostname:
-     nil, article_tags: {}, tagged_with: Article.none,
-     insert_default_article_set: false, copy_articles_from: true,
-     copy_article_tree: nil, copy_article?: false, add_member: false,
-     remove_member: false, add_admin: false, remove_admin: false, add_moderator:
-     false, display_info_to?: true, update_category_from_region: nil,
-     accept_category?: false, custom_header_expanded: '',
-     custom_footer_expanded: '', public?: true, themes: [], find_theme: nil,
-     blogs: Blog.none, blog: nil, has_blog?: false, forums: Forum.none, forum:
-     nil, has_forum?: false, admins: [], settings_field: {}, setting_changed:
-     false, public_content: true, enable_contact?: false, folder_types: [],
-     folders: Article.none, image_galleries: Article.none, image_valid: true,
-     update_header_and_footer: nil, update_theme: nil, update_layout_template:
-     nil, recent_actions: ActionTracker::Record.none, recent_notifications:
-     ActionTracker::Record.none, more_active_label: _('no activity'),
-     more_popular_label: _('no members'), profile_custom_image: nil,
-     is_on_homepage?: false, activities: ProfileActivity.none,
-     may_display_field_to?: true, may_display_location_to?: true, public_fields:
-     {}, followed_by?: false, display_private_info_to?: true, can_view_field?:
-     true, remove_from_suggestion_list: nil, layout_template: 'default',
-     is_admin?: false, add_friend: false, follows?: false, is_a_friend?: false,
-     already_request_friendship?: false, allow_followers: false,
-     in_social_circle: false, in_circle: false
+     remove_profile_from_circle: ProfileFollower.none, followed_profiles: Profile.none
     }
 
     derivated_methods = generate_derivated_methods(methods_and_responses)
