@@ -9,7 +9,7 @@ class Person < Profile
                   :nationality, :address_reference, :district, :schooling,
                   :schooling_status, :formation, :custom_formation, :area_of_study,
                   :custom_area_of_study, :professional_activity, :organization_website,
-                  :following_articles, :private_key, :public_key
+                  :following_articles, :private_key, :public_key, :guid
 
   SEARCH_FILTERS = {
     :order => %w[more_recent more_popular more_active],
@@ -590,6 +590,11 @@ class Person < Profile
     OpenSSL::PKey::RSA.new(self[:public_key]) if self[:public_key]
   end
 
+  def guid
+    generate_guid unless self[:guid].present?
+    self[:guid]
+  end
+
   private
 
   def has_both_keys?
@@ -603,5 +608,9 @@ class Person < Profile
       public_key: keys.public_key.to_s,
       private_key: keys.to_s
     )
+  end
+
+  def generate_guid
+    update_attributes(guid: SecureRandom.uuid)
   end
 end

@@ -1970,4 +1970,15 @@ class PersonTest < ActiveSupport::TestCase
     person.expects(:has_both_keys?).returns(true).once
     person.private_key
   end
+
+  should 'generate a guid if it does not exist' do
+    person = create_user('testuser').person
+    assert_not_nil person.guid
+  end
+
+  should 'not generate a guid if it already exists' do
+    person = create_user('testuser', {}, {guid: 'DD23-SCV1-445AD'}).person
+    person.expects(:generate_guid).never
+    assert_not_nil person.guid
+  end
 end
