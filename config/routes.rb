@@ -137,7 +137,7 @@ Noosfero::Application.routes.draw do
   # Federation endpoints
   ######################################################
 
-  mount DiasporaFederation::Engine => "/diaspora"
+  mount DiasporaFederation::Engine => "/"
 
 
   # cache stuff - hack
