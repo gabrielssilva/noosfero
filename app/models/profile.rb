@@ -234,7 +234,6 @@ class Profile < ApplicationRecord
 
   acts_as_trackable :dependent => :destroy
 
-  has_many :profile_activities
   has_many :action_tracker_notifications, :foreign_key => 'profile_id'
   has_many :tracked_notifications, -> { order 'updated_at DESC' }, through: :action_tracker_notifications, source: :action_tracker
   belongs_to :template, :class_name => 'Profile', :foreign_key => 'template_id'
@@ -965,11 +964,6 @@ private :generate_url, :url_options
     else
       url == '/' + self.identifier
     end
-  end
-
-  # Customize in subclasses
-  def activities
-    self.profile_activities.includes(:activity).order('updated_at DESC')
   end
 
   def may_display_field_to? field, user = nil

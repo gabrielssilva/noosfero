@@ -33,7 +33,9 @@
           <% end %>
           <% tabs << {:title => _('Profile'), :id => 'person-profile', :content => (render :partial => 'person_profile')} %>
         <% elsif @profile.person? && @profile.remote? %>
-          <!-- TODO: content for external profiles -->
+          <% if logged_in? && current_person.follows?(@profile) %>
+            <% tabs << {:title => _('Wall'), :id => 'profile-wall', :content => (render :partial => 'external_profile_wall')} %>
+          <% end %>
         <% end %>
 
         <% tabs += plugins_tabs.select { |tab| !tab[:start] } %>

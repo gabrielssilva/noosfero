@@ -60,8 +60,7 @@ def profile_instance_methods
      custom_url_redirection: nil, email_suggestions: false,
      allow_members_to_invite: false, invite_friends_only: false, secret: false,
      profile_admin_mail_notification: false, redirection_after_login: nil,
-     profile_activities: ProfileActivity.none, action_tracker_notifications:
-     ActionTrackerNotification.none, tracked_notifications:
+     action_tracker_notifications: ActionTrackerNotification.none, tracked_notifications:
      ActionTracker::Record.none, template: Profile.none, comments_received: Comment.none,
      email_templates: EmailTemplate.none, members: Profile.none, members_like:
      Profile.none, members_by: Profile.none, members_by_role: Profile.none, scraps:
@@ -89,9 +88,8 @@ def profile_instance_methods
      nil, recent_actions: ActionTracker::Record.none, recent_notifications:
      ActionTracker::Record.none, more_active_label: _('no activity'),
      more_popular_label: _('no members'), profile_custom_image: nil,
-     is_on_homepage?: false, activities: ProfileActivity.none,
-     may_display_field_to?: true, may_display_location_to?: true, public_fields:
-     {}, display_private_info_to?: true, can_view_field?: true,
+     is_on_homepage?: false, may_display_field_to?: true, may_display_location_to?:
+     true, public_fields: {}, display_private_info_to?: true, can_view_field?: true,
      remove_from_suggestion_list: nil, layout_template: 'default',
      is_admin?: false, add_friend: false, is_a_friend?: false,
      already_request_friendship?: false, tracked_actions: ActionTracker::Record.none,

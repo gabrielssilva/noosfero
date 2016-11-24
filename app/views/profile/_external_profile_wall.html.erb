@@ -1,0 +1,4 @@
+<h3><%= _("%s's wall") % @profile.name %></h3>
+<ul id='profile_activities' class='profile-activities'>
+  <%= render :partial => 'profile_activities_list', :locals => {:activities => @activities} %>
+</ul>

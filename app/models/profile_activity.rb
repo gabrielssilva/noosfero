@@ -5,7 +5,7 @@ class ProfileActivity < ApplicationRecord
   attr_accessible :profile_id,
     :profile, :activity
 
-  belongs_to :profile
+  belongs_to :profile, polymorphic: true
   belongs_to :activity, polymorphic: true
 
   # non polymorphic versions

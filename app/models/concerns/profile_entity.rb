@@ -13,6 +13,7 @@ module ProfileEntity
     has_many :abuse_complaints, :as => :reported, :foreign_key => 'requestor_id', :dependent => :destroy
     has_many :domains, :as => :owner
     has_many :scraps_received, -> { order 'updated_at DESC' }, as: :receiver, dependent: :destroy, class_name: 'Scrap'
+    has_many :profile_activities, as: :profile
 
     extend ActsAsHavingBoxes::ClassMethods
     acts_as_having_boxes
@@ -64,6 +65,11 @@ module ProfileEntity
 
   def community?
     self.kind_of?(Community)
+  end
+
+  # Customize in subclasses
+  def activities
+    self.profile_activities.includes(:activity).order('updated_at DESC')
   end
 
   include ActionView::Helpers::TextHelper

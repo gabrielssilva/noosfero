@@ -73,7 +73,7 @@ class Scrap < ApplicationRecord
   def create_activity
     # do not scrap replies (when scrap_id is not nil)
     return if self.scrap_id.present?
-    ProfileActivity.create! profile_id: self.receiver_id, activity: self
+    ProfileActivity.create! profile: self.receiver, activity: self
   end
 
   def update_activity
