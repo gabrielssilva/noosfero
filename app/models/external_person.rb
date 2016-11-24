@@ -177,9 +177,11 @@ class ExternalPerson < ExternalProfile
     ExternalPerson::Image.new(avatar)
   end
 
-  def allow_followers?
+  def allow_followers
     true
   end
+
+  alias_method :allow_followers?, :allow_followers
 
   def data_hash(gravatar_default = nil)
     friends_list = {}
@@ -232,8 +234,8 @@ class ExternalPerson < ExternalProfile
      Organization.none, pending_tasks_for_organization: Task.none,
      build_contact: nil, is_a_friend?: false, ask_to_join?: false, refuse_join:
      nil, blocks_to_expire_cache: [], cache_keys: [], communities_cache_key: '',
-     friends_cache_key: '', manage_friends_cache_key: '',
-     relationships_cache_key: '', is_member_of?: false,
+     friends_cache_key: '', manage_friends_cache_key: '', relationships_cache_key: '',
+     is_member_of?: false, :allow_followers= => true, in_social_circle?: false,
      each_friend: nil, is_last_admin?: false, is_last_admin_leaving?: false,
      leave: nil, last_notification: nil, notification_time: 0, notifier: nil,
      remove_suggestion: nil, allow_invitation_from?: false,

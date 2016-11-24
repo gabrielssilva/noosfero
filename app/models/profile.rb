@@ -709,6 +709,7 @@ private :generate_url, :url_options
 
   # Adds a person as member of this Profile.
   def add_member(person, attributes={})
+    raise ActiveRecord::AssociationTypeMismatch if person.remote?
     if self.has_members? && !self.secret
       if self.closed? && members.count > 0
         AddMember.create!(:person => person, :organization => self) unless self.already_request_membership?(person)

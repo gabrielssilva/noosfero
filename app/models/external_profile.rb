@@ -92,10 +92,11 @@ def profile_instance_methods
      more_popular_label: _('no members'), profile_custom_image: nil,
      is_on_homepage?: false, activities: ProfileActivity.none,
      may_display_field_to?: true, may_display_location_to?: true, public_fields:
-     {}, display_private_info_to?: true, can_view_field?:
-     true, remove_from_suggestion_list: nil, layout_template: 'default',
+     {}, display_private_info_to?: true, can_view_field?: true,
+     remove_from_suggestion_list: nil, layout_template: 'default',
      is_admin?: false, add_friend: false, is_a_friend?: false,
-     already_request_friendship?: false, tracked_actions: ActionTracker::Record.none
+     already_request_friendship?: false, tracked_actions: ActionTracker::Record.none,
+     in_social_circle?: false
     }
 
     derivated_methods = generate_derivated_methods(methods_and_responses)

@@ -74,18 +74,6 @@ class ExternalPersonTest < ActiveSupport::TestCase
     assert_match(/http:\/\/#{@external_person.source}\/.*/, @external_person.profile_custom_icon)
   end
 
-  should 'have an url to its profile on its original environment' do
-    assert_match(/http:\/\/#{@external_person.source}\/profile\/.*/, @external_person.url)
-  end
-
-  should 'have a public profile url' do
-    assert_match(/http:\/\/#{@external_person.source}\/profile\/.*/, @external_person.public_profile_url)
-  end
-
-  should 'have an admin url to its profile on its original environment' do
-    assert_match(/http:\/\/#{@external_person.source}\/myprofile\/.*/, @external_person.admin_url)
-  end
-
   should 'never be a friend of another person' do
     friend = fast_create(Person)
     friend.add_friend @external_person
