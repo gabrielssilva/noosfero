@@ -72,7 +72,15 @@ DiasporaFederation.configure do |config|
     end
 
     on :fetch_public_key do |diaspora_id|
-      # ...
+      identifier, host = diaspora_id.split('@')
+      # TODO: change to domain
+      person = if host == "noosfero.local"
+        Person.find_by(identifier: identifier)
+      else
+        ExternalPerson.find_by(identifier: identifier)
+      end
+
+      person.public_key
     end
 
     on :fetch_related_entity do |entity_type, guid|
@@ -80,7 +88,10 @@ DiasporaFederation.configure do |config|
     end
 
     on :queue_public_receive do |xml, legacy=false|
-      # ...
+      # The Salmon message should be processed in background, but
+      # for some reason the fetch_public_key callback is not being
+      # triggered when the slap is unevenloped
+      DiasporaFederation::Federation::Receiver.receive_public(xml, legacy)
     end
 
     on :queue_private_receive do |guid, xml, legacy=false|
@@ -88,7 +99,7 @@ DiasporaFederation.configure do |config|
     end
 
     on :receive_entity do |entity, _sender, recipient_id|
-      # ...
+      Federation::Diaspora::EntityReceiver.handle(entity)
     end
 
     on :fetch_public_entity do |entity_type, guid|
