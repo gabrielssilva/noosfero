@@ -62,10 +62,9 @@ def profile_instance_methods
      profile_admin_mail_notification: false, redirection_after_login: nil,
      profile_activities: ProfileActivity.none, action_tracker_notifications:
      ActionTrackerNotification.none, tracked_notifications:
-     ActionTracker::Record.none, scraps_received: Scrap.none, template:
-     Profile.none, comments_received: Comment.none, email_templates:
-     EmailTemplate.none, members: Profile.none, members_like: Profile.none,
-     members_by: Profile.none, members_by_role: Profile.none, scraps:
+     ActionTracker::Record.none, template: Profile.none, comments_received: Comment.none,
+     email_templates: EmailTemplate.none, members: Profile.none, members_like:
+     Profile.none, members_by: Profile.none, members_by_role: Profile.none, scraps:
      Scrap.none, welcome_page_content: nil, settings: {}, find_in_all_tasks:
      nil, top_level_categorization: {}, interests: Category.none, geolocation:
      '', country_name: '', pending_categorizations: [], add_category: false,

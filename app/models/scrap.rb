@@ -11,8 +11,8 @@ class Scrap < ApplicationRecord
   validates_presence_of :content
   validates_presence_of :sender_id, :receiver_id
 
-  belongs_to :receiver, :class_name => 'Profile', :foreign_key => 'receiver_id'
-  belongs_to :sender, :class_name => 'Person', :foreign_key => 'sender_id'
+  belongs_to :receiver, polymorphic: true
+  belongs_to :sender, polymorphic: true
   has_many :replies, :class_name => 'Scrap', :foreign_key => 'scrap_id', :dependent => :destroy
   belongs_to :root, :class_name => 'Scrap', :foreign_key => 'scrap_id'
 

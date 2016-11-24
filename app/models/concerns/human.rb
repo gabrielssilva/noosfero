@@ -2,6 +2,7 @@ module Human
   extend ActiveSupport::Concern
 
   included do
+    has_many :scraps_sent, as: :sender, :dependent => :destroy, class_name: 'Scrap'
     has_many :comments, :as => :author, :foreign_key => :author_id
     has_many :abuse_reports, :as => :reporter, :foreign_key => 'reporter_id', :dependent => :destroy
 

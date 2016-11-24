@@ -207,8 +207,8 @@ class ExternalPerson < ExternalProfile
      enterprises: Enterprise.none, communities: Community.none, friends:
      Person.none, memberships: Profile.none, friendships: Person.none,
      following_articles: Article.none, article_followers: ArticleFollower.none,
-     requested_tasks: Task.none, mailings: Mailing.none, scraps_sent:
-     Scrap.none, favorite_enterprise_people: FavoriteEnterprisePerson.none,
+     requested_tasks: Task.none, mailings: Mailing.none, favorite_enterprise_people:
+     FavoriteEnterprisePerson.none,
      favorite_enterprises: Enterprise.none, acepted_forums: Forum.none,
      articles_with_access: Article.none, suggested_profiles:
      ProfileSuggestion.none, suggested_people: ProfileSuggestion.none,

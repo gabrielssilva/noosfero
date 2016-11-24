@@ -109,8 +109,6 @@ class Person < Profile
 
   has_many :mailings
 
-  has_many :scraps_sent, :class_name => 'Scrap', :foreign_key => :sender_id, :dependent => :destroy
-
   has_many :favorite_enterprise_people
   has_many :favorite_enterprises, source: :enterprise, through: :favorite_enterprise_people
 
