@@ -313,4 +313,9 @@ class ScrapTest < ActiveSupport::TestCase
     assert_equal s, p2.activities.first.activity
   end
 
+  should 'generate a guid when it is requested' do
+    person = create_user.person
+    scrap = fast_create(Scrap, content: 'scrap', sender_id: person.id, receiver_id: person.id)
+    assert scrap.guid.present?
+  end
 end

@@ -1,6 +1,7 @@
 class Scrap < ApplicationRecord
 
   include SanitizeHelper
+  include HasGUID
 
   attr_accessible :content, :sender_id, :receiver_id, :scrap_id, :marked_people
 
